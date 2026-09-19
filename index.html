@@ -1,0 +1,2581 @@
+<title>Entry Test - Grado 3</title>
+<style>
+  :root{
+    --bg:#fff5fa;
+    --card:#ffffff;
+    --ink:#4a2b3d;
+    --muted:#a17a8d;
+    --line:#ffd6e8;
+    --topbar:#ffd9ea;
+    --topbar-ink:#7a2350;
+    --accent:#ff6fa3;
+    --accent-dark:#e0488a;
+    --progress-bg:#fff0f5;
+    --progress-track:#ffd6e8;
+    --progress-fill:#ff6fa3;
+    --good:#2aab7c;
+    --good-bg:#e0f6ec;
+    --bad:#e2574c;
+    --bad-bg:#fbe4e1;
+    --chip:#ffeef5;
+    --footer-bg:#5c2340;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#2b1a24;
+      --card:#3a2430;
+      --ink:#fbeaf3;
+      --muted:#c9a0b6;
+      --line:#5a3548;
+      --topbar:#4a2c3c;
+      --topbar-ink:#ffd9ea;
+      --accent:#ff8fc0;
+      --accent-dark:#ffb3d6;
+      --progress-bg:#3a2430;
+      --progress-track:#5a3548;
+      --progress-fill:#ff8fc0;
+      --good:#4fd6a2;
+      --good-bg:#173229;
+      --bad:#ff8a80;
+      --bad-bg:#3a2020;
+      --chip:#4a2c3c;
+      --footer-bg:#1f1319;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#2b1a24;
+    --card:#3a2430;
+    --ink:#fbeaf3;
+    --muted:#c9a0b6;
+    --line:#5a3548;
+    --topbar:#4a2c3c;
+    --topbar-ink:#ffd9ea;
+    --accent:#ff8fc0;
+    --accent-dark:#ffb3d6;
+    --progress-bg:#3a2430;
+    --progress-track:#5a3548;
+    --progress-fill:#ff8fc0;
+    --good:#4fd6a2;
+    --good-bg:#173229;
+    --bad:#ff8a80;
+    --bad-bg:#3a2020;
+    --chip:#4a2c3c;
+    --footer-bg:#1f1319;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Nunito',system-ui,sans-serif;
+    min-height:100%;
+  }
+  #app{
+    max-width:720px;
+    margin:0 auto;
+    padding-bottom:40px;
+  }
+
+  /* ---------- MENU SCREEN ---------- */
+  .menu-header{
+    padding:22px 20px 14px;
+    text-align:center;
+  }
+  .menu-header h1{
+    font-family:'Baloo 2','Nunito',sans-serif;
+    font-size:clamp(1.4rem,4.5vw,1.9rem);
+    color:var(--accent-dark);
+    margin:0 0 4px;
+  }
+  .menu-header .sub{
+    color:var(--muted);
+    font-size:0.95rem;
+  }
+  .menu-progress{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 20px 10px;
+  }
+  .menu-progress .track{
+    flex:1;
+    height:10px;
+    background:var(--line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .menu-progress .fill{
+    height:100%;
+    background:var(--accent);
+    border-radius:6px;
+    transition:width .3s ease;
+  }
+  .menu-progress .count{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    color:var(--accent-dark);
+    font-size:0.95rem;
+    white-space:nowrap;
+  }
+  .menu-list{
+    background:var(--card);
+    border-radius:16px;
+    margin:0 14px;
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+  .menu-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .menu-item:last-child{border-bottom:none;}
+  .menu-item:hover{background:var(--chip);}
+  .menu-item.locked{
+    cursor:default;
+    opacity:0.55;
+  }
+  .menu-item .icon{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    background:var(--chip);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.1rem;
+    flex-shrink:0;
+  }
+  .menu-item .info{
+    flex:1;
+    min-width:0;
+  }
+  .menu-item .title{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+  }
+  .menu-item .cat{
+    color:var(--muted);
+    font-size:0.82rem;
+  }
+  .menu-item .status{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .menu-item .status.done{color:var(--good);}
+
+  /* ---------- ACTIVITY SCREEN ---------- */
+  .activity{
+    background:var(--card);
+    min-height:100vh;
+  }
+  .activity-topbar{
+    background:var(--topbar);
+    color:var(--topbar-ink);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+  }
+  .activity-topbar .left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .activity-topbar button.close{
+    background:none;
+    border:2px solid var(--topbar-ink);
+    color:var(--topbar-ink);
+    border-radius:50%;
+    width:32px;
+    height:32px;
+    cursor:pointer;
+    font-size:1rem;
+    line-height:1;
+  }
+  .activity-progressrow{
+    background:var(--progress-bg);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:10px 18px;
+  }
+  .activity-progressrow .track{
+    flex:1;
+    height:8px;
+    background:var(--progress-track);
+    border-radius:5px;
+    overflow:hidden;
+  }
+  .activity-progressrow .fill{
+    height:100%;
+    background:var(--progress-fill);
+    border-radius:5px;
+    transition:width .25s ease;
+  }
+  .activity-progressrow .timer{
+    color:var(--ink);
+    font-size:0.88rem;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+    gap:5px;
+  }
+  .activity-body{
+    padding:22px 20px 100px;
+  }
+  .activity-body h2{
+    font-family:'Baloo 2',sans-serif;
+    color:var(--accent-dark);
+    margin:0 0 6px;
+    font-size:1.4rem;
+  }
+  .activity-body .instructions{
+    color:var(--muted);
+    margin-bottom:22px;
+    font-size:0.95rem;
+  }
+  .es{
+    display:block;
+    color:var(--muted);
+    font-style:italic;
+    font-size:0.85rem;
+    margin-top:2px;
+    font-family:'Nunito',sans-serif;
+    font-weight:400;
+  }
+  .instructions .es{
+    margin-top:4px;
+    margin-bottom:0;
+  }
+  .qrow .es{
+    flex-basis:100%;
+    margin-top:-4px;
+  }
+  .qrow{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+    font-size:1.02rem;
+  }
+  .qrow .num{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    color:var(--accent-dark);
+    min-width:18px;
+  }
+  .qrow select{
+    font-family:'Nunito',sans-serif;
+    font-size:1rem;
+    font-weight:700;
+    color:var(--accent-dark);
+    background:var(--chip);
+    border:none;
+    border-bottom:2px solid var(--accent);
+    border-radius:4px;
+    padding:4px 8px;
+    cursor:pointer;
+  }
+  .qrow select:disabled{
+    background:none;
+    cursor:default;
+    opacity:1;
+    -webkit-appearance:none;
+    appearance:none;
+    border-bottom-style:solid;
+  }
+  .qrow.example select{
+    color:var(--accent-dark);
+    font-style:italic;
+  }
+  .qrow .mark{
+    font-weight:700;
+  }
+  .qrow.correct select{border-bottom-color:var(--good); color:var(--good);}
+  .qrow.correct .mark{color:var(--good);}
+  .qrow.wrong select{border-bottom-color:var(--bad); color:var(--bad);}
+  .qrow.wrong .mark{color:var(--bad);}
+
+  .activity-footer{
+    position:sticky;
+    bottom:0;
+    background:var(--footer-bg);
+    padding:14px 20px;
+    display:flex;
+    justify-content:flex-end;
+  }
+  button.submit-btn{
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:24px;
+    padding:11px 26px;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    cursor:pointer;
+  }
+  button.submit-btn:hover{background:var(--accent-dark);}
+  .activity-feedback{
+    color:var(--bad);
+    font-weight:700;
+    margin-bottom:14px;
+    min-height:20px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(20,25,35,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    z-index:50;
+  }
+  .modal{
+    background:var(--card);
+    border-radius:16px;
+    max-width:420px;
+    width:100%;
+    padding:24px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.3);
+  }
+  .modal h3{
+    font-family:'Baloo 2',sans-serif;
+    color:var(--accent-dark);
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .modal .check-icon{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:var(--good);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.1rem;
+    flex-shrink:0;
+  }
+  .modal p{
+    color:var(--muted);
+    font-size:0.95rem;
+    margin:0 0 18px;
+  }
+  .modal-stats{
+    display:flex;
+    justify-content:space-between;
+    background:var(--chip);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .modal-stats div{flex:1;}
+  .modal-stats .label{
+    color:var(--muted);
+    font-size:0.8rem;
+    margin-bottom:4px;
+  }
+  .modal-stats .value{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1.3rem;
+    color:var(--accent-dark);
+  }
+  .modal-close{
+    width:100%;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    cursor:pointer;
+  }
+  .modal-close:hover{background:var(--accent-dark);}
+
+  .lock-toast{
+    position:fixed;
+    left:50%;
+    bottom:24px;
+    transform:translateX(-50%);
+    background:var(--footer-bg);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:20px;
+    font-size:0.9rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .lock-toast.show{opacity:1;}
+
+  /* ---------- VOCABULARY ACTIVITY ---------- */
+  .vocab-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    background:var(--chip);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:26px;
+  }
+  .vocab-word{
+    padding:9px 14px;
+    border-radius:10px;
+    border:2px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    cursor:pointer;
+    user-select:none;
+    transition:transform .12s ease, border-color .2s ease;
+  }
+  .vocab-word:hover{transform:translateY(-2px);}
+  .vocab-word.selected{
+    border-color:var(--accent);
+    background:var(--accent);
+    color:#fff;
+  }
+  .vocab-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+    gap:22px;
+    margin-bottom:10px;
+  }
+  .vocab-card{
+    text-align:center;
+  }
+  .vocab-card img{
+    max-width:100%;
+    max-height:120px;
+    display:block;
+    margin:0 auto 8px;
+    background:var(--chip);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:8px;
+  }
+  .vocab-card .caption{
+    font-size:0.95rem;
+  }
+  .vocab-blank{
+    display:inline-block;
+    min-width:64px;
+    padding:4px 10px;
+    border-radius:8px;
+    border:2px dashed var(--line);
+    background:var(--chip);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    color:var(--accent-dark);
+    cursor:pointer;
+  }
+  .vocab-blank.filled{
+    border-style:solid;
+    border-color:var(--accent);
+  }
+  .vocab-blank.correct{
+    border-color:var(--good);
+    color:var(--good);
+    background:var(--good-bg);
+  }
+  .vocab-blank.wrong{
+    border-color:var(--bad);
+    color:var(--bad);
+    background:var(--bad-bg);
+  }
+  .vocab-blank.example{
+    border-style:solid;
+    font-style:italic;
+    cursor:default;
+  }
+  .vocab-word.used{
+    opacity:0.35;
+    cursor:not-allowed;
+  }
+  .vocab-paragraph{
+    line-height:1.8;
+    font-size:1.02rem;
+    margin:0 0 16px;
+  }
+  .vocab-paragraph .vocab-blank{
+    margin:0 2px;
+  }
+
+  /* ---------- READING ACTIVITY ---------- */
+  .reading-passage{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    margin-bottom:22px;
+    background:var(--card);
+    font-size:0.98rem;
+    line-height:1.5;
+  }
+  .reading-passage.letter{
+    background:var(--chip);
+    border-color:var(--accent);
+  }
+  .reading-passage .signoff{
+    margin-top:10px;
+  }
+  .reading-passage.message{
+    padding:0;
+    overflow:hidden;
+    border-color:var(--accent);
+  }
+  .reading-passage.message .msg-header{
+    background:var(--accent);
+    color:#fff;
+    padding:8px 14px;
+    font-size:0.85rem;
+  }
+  .reading-passage.message .msg-body{
+    padding:16px;
+  }
+  .reading-question{
+    font-weight:700;
+    margin-bottom:14px;
+    font-size:1.02rem;
+  }
+  .reading-options-img{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+  }
+  .reading-opt-img{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .reading-opt-img img{
+    max-height:90px;
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:6px;
+    background:var(--chip);
+  }
+  .reading-opt-img.selected img{border-color:var(--accent);}
+  .reading-opt-img.correct img{border-color:var(--good); background:var(--good-bg);}
+  .reading-opt-img.wrong img{border-color:var(--bad); background:var(--bad-bg);}
+  .reading-options-text{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .reading-opt-text{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    font-size:1rem;
+    padding:8px 10px;
+    border-radius:8px;
+  }
+  .reading-opt-text.correct{background:var(--good-bg); color:var(--good); font-weight:700;}
+  .reading-opt-text.wrong{background:var(--bad-bg); color:var(--bad); font-weight:700;}
+  .reading-pagerow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    background:var(--progress-bg);
+    padding:12px;
+  }
+  .reading-pagerow button.navarrow{
+    background:none;
+    border:none;
+    font-size:1.2rem;
+    color:var(--accent-dark);
+    cursor:pointer;
+  }
+  .reading-pagerow button.navarrow:disabled{opacity:0.3; cursor:not-allowed;}
+  .reading-pagenum{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    color:var(--muted);
+    cursor:pointer;
+    padding:2px 6px;
+  }
+  .reading-pagenum.current{color:var(--accent-dark); text-decoration:underline;}
+  .reading-pagenum.answered{color:var(--accent);}
+  .reading-photo{
+    max-width:260px;
+    width:100%;
+    border-radius:12px;
+    display:block;
+    margin:0 auto 22px;
+  }
+  .reading-centered{
+    text-align:center;
+  }
+  .reading-centered .reading-options-text{
+    align-items:center;
+  }
+  .reading-centered .reading-options-img{
+    justify-content:center;
+  }
+  .reading-centered .reading-opt-img img{
+    max-height:200px;
+    max-width:190px;
+  }
+  .reading-centered .reading-question{
+    text-align:center;
+  }
+
+  /* ---------- LISTENING (shared) ---------- */
+  .listen-btn{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:2px solid var(--accent);
+    background:var(--card);
+    color:var(--accent);
+    font-size:1.3rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 22px;
+    padding:0;
+    flex-shrink:0;
+  }
+  .listen-btn:hover{background:var(--chip);}
+  .listen-btn.small{
+    width:40px;
+    height:40px;
+    font-size:1rem;
+    margin:0 0 6px;
+  }
+  .listen-btn.selected{
+    background:var(--accent);
+    color:#fff;
+  }
+  .listen-btn:disabled{
+    cursor:default;
+    opacity:0.55;
+  }
+
+  /* ---------- LISTENING 2 (grid) ---------- */
+  .listen-grid-wrap{
+    overflow-x:auto;
+    margin-bottom:10px;
+  }
+  table.listen-grid{
+    border-collapse:collapse;
+    width:100%;
+  }
+  table.listen-grid th, table.listen-grid td{
+    text-align:center;
+    padding:8px 6px;
+    border-bottom:1px solid var(--line);
+  }
+  table.listen-grid th img{
+    width:88px;
+    height:88px;
+    object-fit:contain;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:5px;
+    background:var(--chip);
+  }
+  .lg-numcell{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    justify-content:flex-start;
+    white-space:nowrap;
+  }
+  .lg-numcell .num{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    color:var(--accent-dark);
+  }
+  .lg-box{
+    display:inline-block;
+    width:24px;
+    height:24px;
+    border-radius:5px;
+    border:2px solid var(--line);
+    background:var(--card);
+    cursor:pointer;
+  }
+  .lg-box.checked{
+    background:var(--accent);
+    border-color:var(--accent);
+  }
+  .lg-box.disabled{
+    cursor:default;
+  }
+  .lg-box.correct{
+    background:var(--good);
+    border-color:var(--good);
+  }
+  .lg-box.wrong{
+    background:var(--bad);
+    border-color:var(--bad);
+  }
+  tr.lg-row.example{
+    opacity:0.75;
+  }
+
+  /* ---------- LISTENING 3 (match) ---------- */
+  .lm-scroll{
+    overflow-x:auto;
+    padding-bottom:4px;
+  }
+  .lm-wrap{
+    position:relative;
+    padding:10px 0 20px;
+    min-width:max-content;
+  }
+  .lm-audio-row, .lm-image-row{
+    display:flex;
+    gap:12px;
+  }
+  .lm-audio-cell, .lm-image-cell{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    flex:0 0 auto;
+    width:108px;
+  }
+  .lm-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--line);
+  }
+  .lm-dot.active{
+    background:var(--accent);
+  }
+  .lm-image-cell img{
+    width:100%;
+    height:108px;
+    object-fit:contain;
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:6px;
+    background:var(--chip);
+    cursor:pointer;
+  }
+  .lm-image-cell.used img{
+    border-color:var(--accent);
+  }
+  .lm-image-cell.example img{
+    border-color:var(--muted);
+    opacity:0.7;
+    cursor:default;
+  }
+  .lm-image-cell.correct img{
+    border-color:var(--good);
+    background:var(--good-bg);
+  }
+  .lm-image-cell.wrong img{
+    border-color:var(--bad);
+    background:var(--bad-bg);
+  }
+  .lm-svg{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+  }
+
+  /* ---------- GRAMMAR MULTIPLE CHOICE ---------- */
+  .gmc-block{
+    margin-bottom:26px;
+  }
+  .gmc-qtext{
+    font-weight:700;
+    margin-bottom:10px;
+    display:flex;
+    gap:8px;
+  }
+  .gmc-qtext .num{
+    font-family:'Baloo 2',sans-serif;
+    color:var(--accent-dark);
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+
+<div id="app"></div>
+<div class="lock-toast" id="lockToast">Esta actividad todavia no esta lista</div>
+
+<script>
+/* ================= DATA ================= */
+
+const activities = [
+  {id:"listening1", title:"Listening 1", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"reading", data:{
+    // NOTA: correct son CONJETURAS (no verificadas con audio real). Jose mando capturas de un intento
+    // marcado con X roja (opcion incorrecta seleccionada), pero no el audio ni una respuesta confirmada.
+    // Q1/Q2/Q3: se sabe que la opcion marcada con X esta mal, se eligio la mas probable entre las 2 restantes.
+    // Q4/Q5: no habia ninguna marca/pista en las capturas, la respuesta es un intento a ciegas.
+    // Reemplazar estos valores en cuanto Jose consiga una respuesta confirmada.
+    heading:"Listening",
+    instructions:"Listen and choose the correct answer.",
+    instructionsEs:"Escucha y elige la respuesta correcta.",
+    pages:[
+      { passageType:"audio", audioScript:"Dad is looking at a photo of a farm. There is a tractor and a little rabbit in the picture.", questions:[
+        { question:"Which photo is Dad looking at?", questionEs:"¿Qué foto está mirando papá?", optionType:"image", options:[{img:"l1-q1-a.png"},{img:"l1-q1-b.png"},{img:"l1-q1-c.png"}], correct:1 }
+      ]},
+      { passageType:"audio", audioScript:"The girl needs a new skirt for the party on Saturday.", questions:[
+        { question:"What does the girl need?", questionEs:"¿Qué necesita la niña?", optionType:"image", options:[{img:"l1-q2-a.png"},{img:"l1-q2-b.png"},{img:"l1-q2-c.png"}], correct:0 }
+      ]},
+      { passageType:"audio", audioScript:"Jane's favourite animal at the zoo was the kangaroo. She loved watching it jump around.", questions:[
+        { question:"Which was Jane's favourite animal at the zoo?", questionEs:"¿Cuál era el animal favorito de Jane en el zoológico?", optionType:"image", options:[{img:"l1-q3-a.png"},{img:"l1-q3-b.png"},{img:"l1-q3-c.png"}], correct:2 }
+      ]},
+      { passageType:"audio", audioScript:"Tom got roller skates for his birthday. He was very happy and wanted to try them right away.", questions:[
+        { question:"What did Tom get for his birthday?", questionEs:"¿Qué recibió Tom en su cumpleaños?", optionType:"image", options:[{img:"l1-q4-a.png"},{img:"l1-q4-b.png"},{img:"l1-q4-c.png"}], correct:2 }
+      ]},
+      { passageType:"audio", audioScript:"Dad is cooking dinner in the kitchen. It smells delicious!", questions:[
+        { question:"What is Dad doing?", questionEs:"¿Qué está haciendo papá?", optionType:"image", options:[{img:"l1-q5-a.png"},{img:"l1-q5-b.png"},{img:"l1-q5-c.png"}], correct:1 }
+      ]},
+    ]
+  }},
+  {id:"grammar1",   title:"Grammar 1",   category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"grammar", data:{
+    instructions:"Complete the sentences. Choose the correct answer. There is one example.",
+    instructionsEs:"Completa las oraciones. Elige la respuesta correcta. Hay un ejemplo.",
+    example:{before:"I usually", answer:"drink", after:"water for breakfast.", sentenceEs:"Yo normalmente ___ agua en el desayuno."},
+    questions:[
+      {before:"James", after:"go to Jack's birthday party.", options:["wasn't","hasn't","didn't"], correct:"didn't", sentenceEs:"James ___ fue a la fiesta de cumpleaños de Jack."},
+      {before:"Our new teacher is", after:"Mr Chips!", options:["calling","called","calls"], correct:"called", sentenceEs:"¡Nuestro nuevo profesor se ___ el Sr. Chips!"},
+      {before:"My bike is older", after:"my friend's bike.", options:["than","with","for"], correct:"than", sentenceEs:"Mi bicicleta es más vieja ___ la de mi amigo."},
+      {before:"", after:"you like to have a picnic at the lake?", options:["Would","Must","Are"], correct:"Would", sentenceEs:"¿___ te gustaría hacer un picnic en el lago?"},
+      {before:"I had", after:"egg for breakfast.", options:["a","an","any"], correct:"an", sentenceEs:"Comí ___ huevo en el desayuno."},
+    ]
+  }},
+  {id:"vocabulary1", title:"Vocabulary 1", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"vocabulary", data:{
+    instructions:"Look at the pictures. Complete the gaps. There is one example.",
+    instructionsEs:"Mira las imágenes. Completa los espacios. Hay un ejemplo.",
+    bankWords:["curly","easy","hungry","old","strong","sunny","wet"],
+    example:{img:"q0-plate.png", before:"a", answer:"square", after:"plate", capEs:"un plato cuadrado"},
+    questions:[
+      {img:"q1-hair.png",       before:"her",     answer:"curly",  after:"hair", capEs:"su cabello rizado"},
+      {img:"q2-weather.png",    before:"hot and", answer:"sunny",  after:"weather", capEs:"clima caluroso y soleado"},
+      {img:"q3-filmstar.png",   before:"an",      answer:"old",    after:"film star", capEs:"una vieja estrella de cine"},
+      {img:"q4-strongman.png",  before:"a very",  answer:"strong", after:"man", capEs:"un hombre muy fuerte"},
+      {img:"q5-wetclothes.png", before:"",        answer:"wet",    after:"clothes", capEs:"ropa mojada"},
+    ]
+  }},
+  {id:"reading1", title:"Reading 1", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"reading", data:{
+    instructions:"Read and choose one answer.",
+    instructionsEs:"Lee y elige una respuesta.",
+    pages:[
+      {
+        passageType:"plain",
+        passage:"Today we are painting the front of the school. Children cannot play there. We are also painting the back play area. Children can only play on the grass.",
+        passageEs:"Hoy estamos pintando el frente de la escuela. Los niños no pueden jugar ahí. También estamos pintando el área de juegos de atrás. Los niños solo pueden jugar en el pasto.",
+        questions:[
+          {
+            question:"Where can children play today?",
+            questionEs:"¿Dónde pueden jugar los niños hoy?",
+            optionType:"image",
+            options:[
+              {img:"q6-school-a.png"},
+              {img:"q6-school-b.png"},
+              {img:"q6-school-c.png"},
+            ],
+            correct:2
+          }
+        ]
+      },
+      {
+        passageType:"plain",
+        passage:"I'm Camila. This is my favorite breakfast. I eat an egg with some bread. I don't eat fruit, but I have a glass of fruit juice.",
+        passageEs:"Soy Camila. Este es mi desayuno favorito. Como un huevo con pan. No como fruta, pero tomo un vaso de jugo de fruta.",
+        questions:[
+          {
+            question:"Which is Camila's favorite breakfast?",
+            questionEs:"¿Cuál es el desayuno favorito de Camila?",
+            optionType:"image",
+            options:[
+              {img:"q7-bf-a.png"},
+              {img:"q7-bf-b.png"},
+              {img:"q7-bf-c.png"},
+            ],
+            correct:0
+          }
+        ]
+      },
+      {
+        passageType:"letter",
+        nameTop:"Peter",
+        passage:"Don't get the bus to the basketball game tomorrow. Dad can take us in the car. You can leave your bike at our house.",
+        passageEs:"No tomes el bus mañana para ir al partido de baloncesto. Papá nos puede llevar en el carro. Puedes dejar tu bicicleta en nuestra casa.",
+        nameBottom:"Roman",
+        questions:[
+          {
+            question:"How will the boys get to the basketball game?",
+            questionEs:"¿Cómo van a llegar los niños al partido de baloncesto?",
+            optionType:"text",
+            options:[{label:"bus"},{label:"car"},{label:"bike"}],
+            correct:1
+          }
+        ]
+      },
+      {
+        passageType:"message",
+        nameTop:"Hi Kelly",
+        passage:"The movie was great last night. I wanted to eat something when I got home. But I was too tired to make anything. I watched TV and then I fell asleep.",
+        passageEs:"La película estuvo genial anoche. Quería comer algo cuando llegué a casa. Pero estaba muy cansada para preparar algo. Vi televisión y luego me quedé dormida.",
+        nameBottom:"Juana",
+        questions:[
+          {
+            question:"What did Juana do first when she came home?",
+            questionEs:"¿Qué hizo Juana primero cuando llegó a casa?",
+            optionType:"text",
+            options:[{label:"had some food"},{label:"watched TV"},{label:"fell asleep"}],
+            correct:1
+          }
+        ]
+      },
+      {
+        passageType:"plain",
+        passage:"Does your dad drive a taxi like Ana's? Does your mom work for the police like Jorge's? Today Jonathan's dad is going to talk to us. He's a farmer with some interesting stories.",
+        passageEs:"¿Tu papá maneja un taxi como el de Ana? ¿Tu mamá trabaja en la policía como la de Jorge? Hoy el papá de Jonathan nos va a hablar. Él es agricultor y tiene historias interesantes.",
+        questions:[
+          {
+            question:"What is Jonathan's dad's job?",
+            questionEs:"¿Cuál es el trabajo del papá de Jonathan?",
+            optionType:"text",
+            options:[{label:"farmer"},{label:"taxi driver"},{label:"police officer"}],
+            correct:0
+          }
+        ]
+      },
+    ]
+  }},
+  {id:"listening2", title:"Listening 2", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"listeninggrid", data:{
+    // NOTA: correct son respuestas inventadas por Claude (audio de practica), no el audio oficial del examen.
+    // Jose mando capturas de un intento con X roja en: fila1=phone, fila2=brush, fila3=keys, fila4=letter, fila5=shirt.
+    // Se evitaron esas opciones al asignar las respuestas de practica.
+    instructions:"Listen to five different conversations about things that are lost. Choose one picture for each conversation. There is one example.",
+    instructionsEs:"Escucha cinco conversaciones diferentes sobre cosas que se perdieron. Elige una imagen para cada conversación. Hay un ejemplo.",
+    subQuestion:"What is lost?",
+    subQuestionEs:"¿Qué se perdió?",
+    items:[
+      {img:"l2-comb.png"},
+      {img:"l2-brush.png"},
+      {img:"l2-keys.png"},
+      {img:"l2-letter.png"},
+      {img:"l2-backpack.png"},
+      {img:"l2-phone.png"},
+      {img:"l2-shirt.png"},
+    ],
+    example:{answer:1},
+    questions:[
+      {correct:0, audioScript:"Boy: Have you seen my comb? I can't find it anywhere! Girl: Did you check your bag? Boy: Yes, it's not there. I think I lost my comb at school."},
+      {correct:2, audioScript:"Mom: Where are my keys? I need to open the door! Dad: Did you leave them in your coat pocket? Mom: I looked there already. I can't find my keys."},
+      {correct:3, audioScript:"Teacher: Did anyone find a letter near the door? Student: I saw an envelope on the floor this morning. Teacher: Yes! That's the letter I lost."},
+      {correct:4, audioScript:"Girl: I can't find my backpack! Boy: Did you leave it on the bus? Girl: Oh no, I think I forgot my backpack there this morning."},
+      {correct:5, audioScript:"Dad: Where is your phone? Son: I had it in my pocket a minute ago. Dad: Well, it's not there now. You've lost your phone again!"},
+    ]
+  }},
+  {id:"grammar2", title:"Grammar 2", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"grammarmc", data:{
+    instructions:"Read the questions. Choose the correct answer. There is one example.",
+    instructionsEs:"Lee las preguntas. Elige la respuesta correcta. Hay un ejemplo.",
+    questions:[
+      {question:"Where were you when you saw Jane this morning?", questionEs:"¿Dónde estabas cuando viste a Jane esta mañana?", options:["I was going to the dentist.","I went to the dentist.","I've been to the dentist."], correct:0},
+      {question:"How long did it take to sail to the island?", questionEs:"¿Cuánto tiempo tomó navegar a la isla?", options:["Not very much.","For a weekend.","About three hours."], correct:2},
+      {question:"Our teacher has given us a lot of homework, hasn't she?", questionEs:"Nuestra profesora nos dio mucha tarea, ¿verdad?", options:["Yes – I can't do all of it.","Yes – she might do that.","Yes – we've got many of them."], correct:0},
+      {question:"What does your new football coach look like?", questionEs:"¿Cómo es tu nuevo entrenador de fútbol?", options:["He loves movies.","He's quite funny.","He's quite short."], correct:2},
+      {question:"Shall we go swimming or cycling tomorrow?", questionEs:"¿Vamos a nadar o a andar en bicicleta mañana?", options:["I'd prefer to go swimming.","We're going swimming.","Swimming, and you?"], correct:0},
+    ]
+  }},
+  {id:"vocabulary2", title:"Vocabulary 2", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"vocabularytext", data:{
+    instructions:"Complete the text with the words below. There is one example.",
+    instructionsEs:"Completa el texto con las palabras de abajo. Hay un ejemplo.",
+    paragraphsEs:[
+      "A mis papás les encanta la historia local, así que cuando visitamos una ciudad nueva, siempre visitamos al menos un museo (ejemplo). A mí no me molesta hacer eso, pero prefiero encontrar un lindo ___ donde pueda comer pasteles y helado.",
+      "Caminamos mucho en estas vacaciones. A mi papá le gusta descubrir calles pequeñas y ___ por donde los turistas no suelen caminar. Mis papás usualmente usan un ___ para encontrar los lugares que queremos ver. No les gusta usar aplicaciones del celular, pero a veces nos ___ y entonces tienen que usar sus teléfonos. Descubrir cosas nuevas es muy ___ pero caminar nos cansa mucho. Así que en las noches solo volvemos al hotel a relajarnos y jugar juegos de mesa juntos."
+    ],
+    bankWords:["broken","café","interesting","library","lost","map","paths"],
+    example:{answer:"museum"},
+    paragraphs:[
+      [
+        {text:"My parents love local history so when we visit a new city, we always visit at least one "},
+        {blank:"example"},
+        {text:". I don't mind doing that, but I much prefer finding a nice "},
+        {blank:0},
+        {text:" where I can eat cakes and ice-cream."}
+      ],
+      [
+        {text:"We do a lot of walking on these holidays. My dad likes to discover little streets and "},
+        {blank:1},
+        {text:" that tourists don't usually walk down. My parents usually use a "},
+        {blank:2},
+        {text:" to find the places we want to see. They don't like using phone apps, but sometimes we get "},
+        {blank:3},
+        {text:" and then they have to use their phones. Discovering new things is really "},
+        {blank:4},
+        {text:" but walking makes us very tired. So in the evenings we just go back to our hotel to relax and play board games together."}
+      ]
+    ],
+    answers:["café","paths","map","lost","interesting"]
+  }},
+  {id:"reading2", title:"Reading 2", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"reading", data:{
+    instructions:"Read and choose one answer.",
+    instructionsEs:"Lee y elige una respuesta.",
+    pages:[
+      {
+        passageType:"plain",
+        passage:"I'm Mateo. There's a new movie theater in town! My best friend went last week, and had a great time. I was so excited about going there, and my dad wanted to take me. When he said he had to work, I was sad. But it was OK because my sister was home from university. So we went together! It's right by the park and easy to get to. The old movie theater was next to the museum, but that's a shopping center now. Everything's changed!",
+        passageEs:"Soy Mateo. ¡Hay un cine nuevo en la ciudad! Mi mejor amigo fue la semana pasada y la pasó muy bien. Yo estaba muy emocionado por ir, y mi papá quería llevarme. Cuando dijo que tenía que trabajar, me puse triste. Pero estuvo bien porque mi hermana había vuelto de la universidad. ¡Así que fuimos juntos! Está justo al lado del parque y es fácil de llegar. El cine viejo estaba al lado del museo, pero ahora eso es un centro comercial. ¡Todo ha cambiado!",
+        questions:[
+          {
+            question:"Who did Mateo go to the movie theatre with?",
+            questionEs:"¿Con quién fue Mateo al cine?",
+            optionType:"text",
+            options:[{label:"his sister"},{label:"his dad"},{label:"his best friend"}],
+            correct:0
+          },
+          {
+            question:"Where is the movie theater?",
+            questionEs:"¿Dónde está el cine?",
+            optionType:"text",
+            options:[{label:"by the museum"},{label:"in the shopping center"},{label:"near the park"}],
+            correct:2
+          }
+        ]
+      },
+      {
+        passageType:"plain",
+        passage:"There were lots of different movies on. We wanted to see one about a boat trip across the ocean but there were no tickets left. There were still some for one about a journey into space, and one about a racing driver. We thought that would be boring, so we chose the movie about going to the moon. The story was so exciting. I was surprised by what happened! The actors were all right, and the music was OK although it was really loud.",
+        passageEs:"Había muchas películas diferentes. Queríamos ver una sobre un viaje en barco por el océano pero ya no había boletos. Todavía había para una sobre un viaje al espacio, y otra sobre un piloto de carreras. Pensamos que esa sería aburrida, así que elegimos la película sobre ir a la luna. La historia fue muy emocionante. ¡Me sorprendió lo que pasó! Los actores estuvieron bien, y la música estuvo bien aunque era muy fuerte.",
+        questions:[
+          {
+            question:"What was the movie about?",
+            questionEs:"¿De qué trataba la película?",
+            optionType:"image",
+            options:[
+              {img:"q8-movie-a.png"},
+              {img:"q8-movie-b.png"},
+              {img:"q8-movie-c.png"},
+            ],
+            correct:0
+          },
+          {
+            question:"What did Mateo like most about the movie?",
+            questionEs:"¿Qué fue lo que más le gustó a Mateo de la película?",
+            optionType:"text",
+            options:[{label:"the actors"},{label:"the music"},{label:"the story"}],
+            correct:2
+          }
+        ]
+      },
+      {
+        passageType:"plain",
+        passage:"I was happy with my seat, because it's difficult to watch movies when you're right at the front. The screen is so big! From our seats in the middle, we could see everything. There were none left at the back when we got our tickets. That's the best place to sit and watch a movie, I think.",
+        passageEs:"Estaba feliz con mi asiento, porque es difícil ver películas cuando estás justo al frente. ¡La pantalla es enorme! Desde nuestros asientos en el medio, podíamos ver todo. Ya no quedaban asientos atrás cuando compramos los boletos. Ese es el mejor lugar para sentarse y ver una película, creo.",
+        questions:[
+          {
+            question:"Where did Mateo sit?",
+            questionEs:"¿Dónde se sentó Mateo?",
+            optionType:"image",
+            options:[
+              {img:"q9-seat-a.png"},
+              {img:"q9-seat-b.png"},
+              {img:"q9-seat-c.png"},
+            ],
+            correct:1
+          }
+        ]
+      },
+    ]
+  }},
+  {id:"listening3", title:"Listening 3", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"listeningmatch", data:{
+    // NOTA: correct son las respuestas REALES leidas de la captura de Jose (lineas verdes=bien, roja=mal,
+    // gris=ejemplo dado). El ejemplo conecta con el hoop. "camper" (notepad queda sin usar, es el distractor).
+    instructions:"Listen and choose the correct answer. There is one example.",
+    instructionsEs:"Escucha y elige la respuesta correcta. Hay un ejemplo.",
+    images:[
+      {img:"l3-cup.png"},
+      {img:"l3-camper.png"},
+      {img:"l3-horse.png"},
+      {img:"l3-hoop.png"},
+      {img:"l3-piano.png"},
+      {img:"l3-oldman.png"},
+      {img:"l3-notepad.png"},
+    ],
+    example:{correct:3, audioScript:"She is playing with a hula hoop in the garden."},
+    audios:[
+      {correct:0, audioScript:"Can I have a cup of water, please? I'm very thirsty."},
+      {correct:5, audioScript:"The old man was walking slowly down the street with his stick."},
+      {correct:2, audioScript:"Look at that horse running in the field! It's so fast."},
+      {correct:4, audioScript:"He practices the piano every evening after dinner."},
+      {correct:1, audioScript:"We are going on holiday in our camper van this summer."},
+    ]
+  }},
+  {id:"grammar3", title:"Grammar 3", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"grammarbank", data:{
+    instructions:"Read and complete the sentences. There is one example.",
+    instructionsEs:"Lee y completa las oraciones. Hay un ejemplo.",
+    bankWords:["a TV.","about a giraffe.","drawing?","her new T-shirt.","home now.","spell your name?"],
+    example:{before:"I like listening", answer:"to music.", sentenceEs:"Me gusta escuchar ___."},
+    questions:[
+      {before:"This story is", answer:"about a giraffe.", sentenceEs:"Esta historia es ___."},
+      {before:"What are you", answer:"drawing?", sentenceEs:"¿Qué estás ___?"},
+      {before:"Anne is wearing", answer:"her new T-shirt.", sentenceEs:"Anne está usando ___."},
+      {before:"How do you", answer:"spell your name?", sentenceEs:"¿Cómo se ___?"},
+      {before:"Let's go", answer:"home now.", sentenceEs:"Vamos ___."},
+    ]
+  }},
+  {id:"vocabulary3", title:"Vocabulary 3", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"vocabulary", data:{
+    instructions:"Look and read. Match the words to the correct picture. There is one example.",
+    instructionsEs:"Mira y lee. Relaciona las palabras con la imagen correcta. Hay un ejemplo.",
+    bankWords:["a new computer","a toy helicopter","a white plane","an old car","some school bags","two boats"],
+    example:{img:"q10-pencils.png", before:"", answer:"some pencils", after:"", capEs:"unos lápices"},
+    questions:[
+      {img:"q10-car.png",        before:"", answer:"an old car",        after:"", capEs:"un carro viejo"},
+      {img:"q10-boats.png",      before:"", answer:"two boats",         after:"", capEs:"dos botes"},
+      {img:"q10-computer.png",   before:"", answer:"a new computer",    after:"", capEs:"una computadora nueva"},
+      {img:"q10-helicopter.png", before:"", answer:"a toy helicopter",  after:"", capEs:"un helicóptero de juguete"},
+      {img:"q10-bags.png",       before:"", answer:"some school bags",  after:"", capEs:"unas mochilas escolares"},
+    ]
+  }},
+  {id:"reading3", title:"Reading 3", category:"Lower Primary Grade 3 Entry Test", ready:true, kind:"reading", data:{
+    instructions:"Choose one answer.",
+    instructionsEs:"Elige una respuesta.",
+    pages:[
+      {
+        passageType:"photo",
+        img:"q11-dog.png",
+        questions:[
+          {question:"", optionType:"text", options:[{label:"bag"},{label:"dog"}], correct:1}
+        ]
+      },
+      {
+        passageType:"photo",
+        img:"q11-girl.png",
+        questions:[
+          {question:"", optionType:"text", options:[{label:"girl"},{label:"give"}], correct:0}
+        ]
+      },
+      {
+        passageType:"photo",
+        img:"q11-nose.png",
+        questions:[
+          {question:"", optionType:"text", options:[{label:"lose"},{label:"nose"}], correct:1}
+        ]
+      },
+      {
+        passageType:"photo",
+        img:"q11-bird.png",
+        questions:[
+          {question:"", optionType:"text", options:[{label:"body"},{label:"bird"}], correct:1}
+        ]
+      },
+      {
+        passageType:"photo",
+        img:"q11-house.png",
+        questions:[
+          {question:"", optionType:"text", options:[{label:"house"},{label:"mouth"}], correct:0}
+        ]
+      },
+    ]
+  }},
+];
+
+const results = {}; // id -> {correct, total, score, rawPoints}
+let totalScore = 0;
+
+function applyScore(activityId, correctCount, total){
+  const prev = results[activityId];
+  if(prev){
+    totalScore -= prev.rawPoints; // un intento anterior ya habia sumado puntos: los quitamos primero
+  }
+  const bonus = (correctCount === total) ? 5 : 0;
+  const rawPoints = correctCount + bonus;
+  totalScore += rawPoints;
+  results[activityId] = {correct:correctCount, total:total, score:Math.round(correctCount/total*100), rawPoints:rawPoints};
+}
+let screen = "menu"; // "menu" or an activity id
+
+const app = document.getElementById("app");
+const lockToast = document.getElementById("lockToast");
+const LOCK_TOAST_DEFAULT = lockToast.textContent;
+
+function showLockToast(msg){
+  lockToast.textContent = msg;
+  lockToast.classList.add("show");
+  setTimeout(() => {
+    lockToast.classList.remove("show");
+    lockToast.textContent = LOCK_TOAST_DEFAULT;
+  }, 1800);
+}
+
+// Devuelve una lineita pequena en espanol debajo de un texto en ingles (para que la mama de Daleska
+// entienda de que trata la actividad/pregunta). Si no hay traduccion, no muestra nada.
+function esLine(text){
+  return text ? '<span class="es">&#127466;&#127480; '+text+'</span>' : '';
+}
+
+/* ================= MENU ================= */
+
+function renderMenu(){
+  const doneCount = Object.keys(results).length;
+  let html = "";
+  html += '<div class="menu-header"><h1>ENTRY TEST</h1><div class="sub">Completa todas las actividades.</div></div>';
+  html += '<div class="menu-progress"><div class="track"><div class="fill" style="width:'+(doneCount/activities.length*100)+'%"></div></div><div class="count">'+doneCount+'/'+activities.length+'</div></div>';
+  html += '<div class="menu-list">';
+  activities.forEach(a => {
+    const res = results[a.id];
+    const locked = !a.ready;
+    let statusHtml = '<span class="status">-</span>';
+    if(res){
+      statusHtml = '<span class="status done">'+res.correct+'/'+res.total+'</span>';
+    } else if(locked){
+      statusHtml = '<span class="status">&#128274;</span>';
+    }
+    html += '<div class="menu-item '+(locked?'locked':'')+'" data-id="'+a.id+'">';
+    html += '<div class="icon">&#128187;</div>';
+    html += '<div class="info"><div class="title">'+a.title+'</div><div class="cat">'+a.category+'</div></div>';
+    html += statusHtml;
+    html += '</div>';
+  });
+  html += '</div>';
+  app.innerHTML = html;
+
+  document.querySelectorAll(".menu-item").forEach(el => {
+    el.onclick = () => {
+      const id = el.getAttribute("data-id");
+      const a = activities.find(x => x.id === id);
+      if(!a.ready){
+        lockToast.classList.add("show");
+        setTimeout(() => lockToast.classList.remove("show"), 1600);
+        return;
+      }
+      screen = id;
+      renderScreen();
+    };
+  });
+}
+
+/* ================= GRAMMAR ACTIVITY ================= */
+
+function renderGrammar(activity){
+  const d = activity.data;
+  const state = {
+    answers: new Array(d.questions.length).fill(""),
+    submitted:false,
+    correctFlags:[]
+  };
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Grammar</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div id="qrows"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const qrows = document.getElementById("qrows");
+
+  function optionsHtml(opts, selected, disabled){
+    let s = '<option value="" '+(selected===""?"selected":"")+' disabled hidden></option>';
+    opts.forEach(o => {
+      s += '<option value="'+o+'" '+(o===selected?"selected":"")+'>'+o+'</option>';
+    });
+    return '<select '+(disabled?"disabled":"")+'>'+s+'</select>';
+  }
+
+  function drawRows(){
+    let html2 = "";
+    html2 += '<div class="qrow example"><span class="num">0</span><span>'+d.example.before+'</span>';
+    html2 += '<select disabled><option selected>'+d.example.answer+'</option></select>';
+    html2 += '<span>'+d.example.after+'</span>'+esLine(d.example.sentenceEs)+'</div>';
+
+    d.questions.forEach((q, i) => {
+      let rowClass = "qrow";
+      if(state.submitted){
+        rowClass += state.correctFlags[i] ? " correct" : " wrong";
+      }
+      html2 += '<div class="'+rowClass+'" data-i="'+i+'">';
+      html2 += '<span class="num">'+(i+1)+'</span>';
+      if(q.before) html2 += '<span>'+q.before+'</span>';
+      html2 += optionsHtml(q.options, state.answers[i], state.submitted);
+      html2 += '<span>'+q.after+'</span>';
+      if(state.submitted){
+        html2 += '<span class="mark">'+(state.correctFlags[i] ? "&#10003;" : "&#10007;")+'</span>';
+      }
+      html2 += esLine(q.sentenceEs);
+      html2 += '</div>';
+    });
+    qrows.innerHTML = html2;
+
+    if(!state.submitted){
+      qrows.querySelectorAll(".qrow[data-i] select").forEach(sel => {
+        const i = parseInt(sel.closest(".qrow").getAttribute("data-i"), 10);
+        sel.onchange = () => {
+          state.answers[i] = sel.value;
+          updateProgress();
+        };
+      });
+    }
+  }
+
+  function updateProgress(){
+    const answered = state.answers.filter(a => a !== "").length;
+    document.getElementById("progFill").style.width = (answered/d.questions.length*100)+"%";
+  }
+
+  drawRows();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(state.submitted) return;
+    const fb = document.getElementById("feedback");
+    if(state.answers.some(a => a === "")){
+      fb.textContent = "Completa todas las respuestas antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    state.submitted = true;
+    let correctCount = 0;
+    state.correctFlags = d.questions.map((q,i) => {
+      const ok = state.answers[i] === q.correct;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.questions.length);
+
+    drawRows();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, d.questions.length, () => renderScreen());
+  };
+
+  function tick(){
+    if(state.submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= VOCABULARY ACTIVITY ================= */
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function renderVocabulary(activity){
+  const d = activity.data;
+  const bank = shuffleArr(d.bankWords.map((w,i)=>({word:w, id:i})));
+  const placed = new Array(d.questions.length).fill(null); // each holds a bank token object or null
+  let selectedToken = null;
+  let submitted = false;
+  let correctFlags = [];
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Vocabulary</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div class="vocab-bank" id="vocabBank"></div>';
+  html += '<div class="vocab-grid" id="vocabGrid"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const bankEl = document.getElementById("vocabBank");
+  const gridEl = document.getElementById("vocabGrid");
+
+  function drawBank(){
+    let html2 = "";
+    bank.forEach(tok => {
+      const isUsed = placed.some(p => p && p.id === tok.id);
+      const isSelected = selectedToken && selectedToken.id === tok.id;
+      html2 += '<span class="vocab-word '+(isUsed?"used":"")+' '+(isSelected?"selected":"")+'" data-id="'+tok.id+'" draggable="'+(!isUsed && !submitted)+'">'+tok.word+'</span>';
+    });
+    bankEl.innerHTML = html2;
+
+    if(!submitted){
+      bankEl.querySelectorAll(".vocab-word").forEach(el => {
+        const id = parseInt(el.getAttribute("data-id"),10);
+        const tok = bank.find(t=>t.id===id);
+        const isUsed = placed.some(p => p && p.id === tok.id);
+        if(isUsed) return;
+        el.onclick = () => {
+          selectedToken = (selectedToken && selectedToken.id===tok.id) ? null : tok;
+          drawBank();
+        };
+        el.ondragstart = (ev) => {
+          ev.dataTransfer.setData("text/plain", String(tok.id));
+        };
+      });
+    }
+  }
+
+  function drawGrid(){
+    let html2 = "";
+    html2 += '<div class="vocab-card"><img src="'+d.example.img+'" alt=""><div class="caption">'+d.example.before+' <span class="vocab-blank example">'+d.example.answer+'</span> '+d.example.after+esLine(d.example.capEs)+'</div></div>';
+
+    d.questions.forEach((q,i) => {
+      const tok = placed[i];
+      let blankClass = "vocab-blank";
+      if(tok) blankClass += " filled";
+      if(submitted) blankClass += correctFlags[i] ? " correct" : " wrong";
+      const label = tok ? tok.word : "&nbsp;&nbsp;&nbsp;&nbsp;";
+      html2 += '<div class="vocab-card"><img src="'+q.img+'" alt="">';
+      html2 += '<div class="caption">';
+      if(q.before) html2 += q.before+' ';
+      html2 += '<span class="'+blankClass+'" data-i="'+i+'">'+label+'</span>';
+      if(q.after) html2 += ' '+q.after;
+      html2 += esLine(q.capEs);
+      html2 += '</div></div>';
+    });
+    gridEl.innerHTML = html2;
+
+    if(!submitted){
+      gridEl.querySelectorAll(".vocab-blank[data-i]").forEach(el => {
+        const i = parseInt(el.getAttribute("data-i"),10);
+        el.onclick = () => {
+          if(placed[i]){
+            placed[i] = null;
+            drawBank(); drawGrid(); updateProgress();
+            return;
+          }
+          if(selectedToken){
+            placed[i] = selectedToken;
+            selectedToken = null;
+            drawBank(); drawGrid(); updateProgress();
+          }
+        };
+        el.ondragover = (ev) => ev.preventDefault();
+        el.ondrop = (ev) => {
+          ev.preventDefault();
+          const id = parseInt(ev.dataTransfer.getData("text/plain"),10);
+          const tok = bank.find(t=>t.id===id);
+          if(!tok) return;
+          // remove token from any other blank first
+          for(let k=0;k<placed.length;k++){
+            if(placed[k] && placed[k].id===tok.id) placed[k]=null;
+          }
+          placed[i] = tok;
+          selectedToken = null;
+          drawBank(); drawGrid(); updateProgress();
+        };
+      });
+    }
+  }
+
+  function updateProgress(){
+    const answered = placed.filter(p=>p).length;
+    document.getElementById("progFill").style.width = (answered/d.questions.length*100)+"%";
+  }
+
+  drawBank();
+  drawGrid();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    if(placed.some(p => !p)){
+      fb.textContent = "Coloca todas las palabras antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.questions.map((q,i) => {
+      const ok = placed[i].word === q.answer;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.questions.length);
+
+    drawBank();
+    drawGrid();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, d.questions.length, () => renderScreen());
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= VOCABULARY (PARAGRAPH) ACTIVITY ================= */
+
+function renderVocabularyText(activity){
+  const d = activity.data;
+  const bank = shuffleArr(d.bankWords.map((w,i)=>({word:w, id:i})));
+  const placed = new Array(d.answers.length).fill(null);
+  let selectedToken = null;
+  let submitted = false;
+  let correctFlags = [];
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Vocabulary</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div class="vocab-bank" id="vocabBank"></div>';
+  html += '<div id="vocabText"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const bankEl = document.getElementById("vocabBank");
+  const textEl = document.getElementById("vocabText");
+
+  function drawBank(){
+    let html2 = "";
+    bank.forEach(tok => {
+      const isUsed = placed.some(p => p && p.id === tok.id);
+      const isSelected = selectedToken && selectedToken.id === tok.id;
+      html2 += '<span class="vocab-word '+(isUsed?"used":"")+' '+(isSelected?"selected":"")+'" data-id="'+tok.id+'" draggable="'+(!isUsed && !submitted)+'">'+tok.word+'</span>';
+    });
+    bankEl.innerHTML = html2;
+
+    if(!submitted){
+      bankEl.querySelectorAll(".vocab-word").forEach(el => {
+        const id = parseInt(el.getAttribute("data-id"),10);
+        const tok = bank.find(t=>t.id===id);
+        const isUsed = placed.some(p => p && p.id === tok.id);
+        if(isUsed) return;
+        el.onclick = () => {
+          selectedToken = (selectedToken && selectedToken.id===tok.id) ? null : tok;
+          drawBank();
+        };
+        el.ondragstart = (ev) => {
+          ev.dataTransfer.setData("text/plain", String(tok.id));
+        };
+      });
+    }
+  }
+
+  function blankSpanHtml(i){
+    const tok = placed[i];
+    let blankClass = "vocab-blank";
+    if(tok) blankClass += " filled";
+    if(submitted) blankClass += correctFlags[i] ? " correct" : " wrong";
+    const label = tok ? tok.word : "&nbsp;&nbsp;&nbsp;&nbsp;";
+    return '<span class="'+blankClass+'" data-i="'+i+'">'+label+'</span>';
+  }
+
+  function drawText(){
+    let html2 = "";
+    d.paragraphs.forEach((seg, pi) => {
+      html2 += '<p class="vocab-paragraph">';
+      seg.forEach(part => {
+        if(part.text !== undefined){
+          html2 += part.text;
+        } else if(part.blank === "example"){
+          html2 += '<span class="vocab-blank example">'+d.example.answer+'</span>';
+        } else {
+          html2 += blankSpanHtml(part.blank);
+        }
+      });
+      if(d.paragraphsEs && d.paragraphsEs[pi]) html2 += esLine(d.paragraphsEs[pi]);
+      html2 += '</p>';
+    });
+    textEl.innerHTML = html2;
+
+    if(!submitted){
+      textEl.querySelectorAll(".vocab-blank[data-i]").forEach(el => {
+        const i = parseInt(el.getAttribute("data-i"),10);
+        el.onclick = () => {
+          if(placed[i]){
+            placed[i] = null;
+            drawBank(); drawText(); updateProgress();
+            return;
+          }
+          if(selectedToken){
+            placed[i] = selectedToken;
+            selectedToken = null;
+            drawBank(); drawText(); updateProgress();
+          }
+        };
+        el.ondragover = (ev) => ev.preventDefault();
+        el.ondrop = (ev) => {
+          ev.preventDefault();
+          const id = parseInt(ev.dataTransfer.getData("text/plain"),10);
+          const tok = bank.find(t=>t.id===id);
+          if(!tok) return;
+          for(let k=0;k<placed.length;k++){
+            if(placed[k] && placed[k].id===tok.id) placed[k]=null;
+          }
+          placed[i] = tok;
+          selectedToken = null;
+          drawBank(); drawText(); updateProgress();
+        };
+      });
+    }
+  }
+
+  function updateProgress(){
+    const answered = placed.filter(p=>p).length;
+    document.getElementById("progFill").style.width = (answered/d.answers.length*100)+"%";
+  }
+
+  drawBank();
+  drawText();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    if(placed.some(p => !p)){
+      fb.textContent = "Coloca todas las palabras antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.answers.map((ans,i) => {
+      const ok = placed[i].word === ans;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.answers.length);
+
+    drawBank();
+    drawText();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, d.answers.length, () => renderScreen());
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= READING ACTIVITY ================= */
+
+function renderReading(activity){
+  const d = activity.data;
+  // answers[pageIndex][questionIndex] = selected option index or null
+  const answers = d.pages.map(p => new Array(p.questions.length).fill(null));
+  const totalQuestions = d.pages.reduce((sum,p) => sum + p.questions.length, 0);
+  let current = 0;
+  let submitted = false;
+  let correctFlags = d.pages.map(p => new Array(p.questions.length).fill(false));
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>'+(d.heading || "Reading")+'</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div id="readingBody"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="reading-pagerow" id="pagerow"></div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const bodyEl = document.getElementById("readingBody");
+  const pagerEl = document.getElementById("pagerow");
+
+  function passageHtml(page){
+    if(page.passageType === "letter"){
+      return '<div class="reading-passage letter">'+page.nameTop+'<br><br>'+page.passage+esLine(page.passageEs)+'<div class="signoff">'+page.nameBottom+'</div></div>';
+    }
+    if(page.passageType === "message"){
+      return '<div class="reading-passage message"><div class="msg-header">'+page.nameTop+'</div><div class="msg-body">'+page.passage+esLine(page.passageEs)+'<div class="signoff">'+page.nameBottom+'</div></div></div>';
+    }
+    if(page.passageType === "photo"){
+      return '<img class="reading-photo" src="'+page.img+'" alt="">';
+    }
+    if(page.passageType === "audio"){
+      return "";
+    }
+    return '<div class="reading-passage">'+page.passage+esLine(page.passageEs)+'</div>';
+  }
+
+  function drawPage(){
+    const page = d.pages[current];
+    let html2 = "";
+    html2 += passageHtml(page);
+
+    page.questions.forEach((q, qi) => {
+      if(q.question){
+        html2 += '<div class="reading-question">'+q.question+esLine(q.questionEs)+'</div>';
+      }
+      if(page.passageType === "audio"){
+        html2 += '<button class="listen-btn" type="button">&#9658;</button>';
+      }
+      if(q.optionType === "image"){
+        html2 += '<div class="reading-options-img">';
+        q.options.forEach((opt,i) => {
+          let cls = "reading-opt-img";
+          if(answers[current][qi]===i) cls += " selected";
+          if(submitted){
+            if(i===q.correct) cls += " correct";
+            else if(answers[current][qi]===i) cls += " wrong";
+          }
+          html2 += '<div class="'+cls+'" data-qi="'+qi+'" data-i="'+i+'"><img src="'+opt.img+'" alt=""></div>';
+        });
+        html2 += '</div>';
+      } else {
+        html2 += '<div class="reading-options-text">';
+        q.options.forEach((opt,i) => {
+          let cls = "reading-opt-text";
+          if(submitted){
+            if(i===q.correct) cls += " correct";
+            else if(answers[current][qi]===i) cls += " wrong";
+          }
+          html2 += '<label class="'+cls+'" data-qi="'+qi+'" data-i="'+i+'"><input type="radio" name="ropt'+qi+'" '+(answers[current][qi]===i?"checked":"")+' '+(submitted?"disabled":"")+'> '+opt.label+'</label>';
+        });
+        html2 += '</div>';
+      }
+    });
+
+    if(page.passageType === "photo" || page.passageType === "audio"){
+      html2 = '<div class="reading-centered">'+html2+'</div>';
+    }
+    bodyEl.innerHTML = html2;
+
+    bodyEl.querySelectorAll(".listen-btn").forEach(btn => {
+      btn.onclick = () => {
+        showLockToast("Audio pendiente: esperando la respuesta correcta de José");
+      };
+    });
+
+    if(!submitted){
+      bodyEl.querySelectorAll("[data-qi]").forEach(el => {
+        el.onclick = () => {
+          const qi = parseInt(el.getAttribute("data-qi"),10);
+          const i = parseInt(el.getAttribute("data-i"),10);
+          answers[current][qi] = i;
+          drawPage();
+          drawPager();
+          updateProgress();
+        };
+      });
+    }
+  }
+
+  function drawPager(){
+    let html2 = "";
+    html2 += '<button class="navarrow" id="prevQ" '+(current===0?"disabled":"")+'>&#9664;</button>';
+    d.pages.forEach((page,i) => {
+      let cls = "reading-pagenum";
+      const pageAnswered = answers[i].every(a => a!==null);
+      if(i===current) cls += " current";
+      else if(pageAnswered) cls += " answered";
+      html2 += '<span class="'+cls+'" data-i="'+i+'">'+(i+1)+'</span>';
+    });
+    html2 += '<button class="navarrow" id="nextQ" '+(current===d.pages.length-1?"disabled":"")+'>&#9654;</button>';
+    pagerEl.innerHTML = html2;
+
+    document.getElementById("prevQ").onclick = () => { if(current>0){ current--; drawPage(); drawPager(); } };
+    document.getElementById("nextQ").onclick = () => { if(current<d.pages.length-1){ current++; drawPage(); drawPager(); } };
+    pagerEl.querySelectorAll(".reading-pagenum").forEach(el => {
+      el.onclick = () => { current = parseInt(el.getAttribute("data-i"),10); drawPage(); drawPager(); };
+    });
+  }
+
+  function updateProgress(){
+    let answered = 0;
+    answers.forEach(pageAns => pageAns.forEach(a => { if(a!==null) answered++; }));
+    document.getElementById("progFill").style.width = (answered/totalQuestions*100)+"%";
+  }
+
+  drawPage();
+  drawPager();
+  updateProgress();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    const allAnswered = answers.every(pageAns => pageAns.every(a => a!==null));
+    if(!allAnswered){
+      fb.textContent = "Responde todas las preguntas antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.pages.map((page,pi) => page.questions.map((q,qi) => {
+      const ok = answers[pi][qi] === q.correct;
+      if(ok) correctCount++;
+      return ok;
+    }));
+
+    applyScore(activity.id, correctCount, totalQuestions);
+
+    drawPage();
+    drawPager();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, totalQuestions, () => renderScreen());
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= GRAMMAR MULTIPLE CHOICE ================= */
+
+function renderGrammarMC(activity){
+  const d = activity.data;
+  const answers = new Array(d.questions.length).fill(null);
+  let submitted = false;
+  let correctFlags = [];
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Grammar</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div id="gmcBody"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const bodyEl = document.getElementById("gmcBody");
+
+  function drawQuestions(){
+    let html2 = "";
+    d.questions.forEach((q,qi) => {
+      html2 += '<div class="gmc-block" data-q="'+qi+'">';
+      html2 += '<div class="gmc-qtext"><span class="num">'+(qi+1)+'</span><span>'+q.question+esLine(q.questionEs)+'</span></div>';
+      html2 += '<div class="reading-options-text">';
+      q.options.forEach((opt,i) => {
+        let cls = "reading-opt-text";
+        if(submitted){
+          if(i===q.correct) cls += " correct";
+          else if(answers[qi]===i) cls += " wrong";
+        }
+        html2 += '<label class="'+cls+'" data-q="'+qi+'" data-i="'+i+'"><input type="radio" name="gmc'+qi+'" '+(answers[qi]===i?"checked":"")+' '+(submitted?"disabled":"")+'> '+opt+'</label>';
+      });
+      html2 += '</div></div>';
+    });
+    bodyEl.innerHTML = html2;
+
+    if(!submitted){
+      bodyEl.querySelectorAll(".reading-opt-text").forEach(el => {
+        el.onclick = () => {
+          const qi = parseInt(el.getAttribute("data-q"),10);
+          const i = parseInt(el.getAttribute("data-i"),10);
+          answers[qi] = i;
+          drawQuestions();
+          updateProgress();
+        };
+      });
+    }
+  }
+
+  function updateProgress(){
+    const answered = answers.filter(a=>a!==null).length;
+    document.getElementById("progFill").style.width = (answered/d.questions.length*100)+"%";
+  }
+
+  drawQuestions();
+  updateProgress();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    if(answers.some(a => a===null)){
+      fb.textContent = "Responde todas las preguntas antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.questions.map((q,i) => {
+      const ok = answers[i] === q.correct;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.questions.length);
+
+    drawQuestions();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, d.questions.length, () => renderScreen());
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= GRAMMAR (WORD BANK) ACTIVITY ================= */
+
+function renderGrammarBank(activity){
+  const d = activity.data;
+  const bank = shuffleArr(d.bankWords.map((w,i)=>({word:w, id:i})));
+  const placed = new Array(d.questions.length).fill(null);
+  let selectedToken = null;
+  let submitted = false;
+  let correctFlags = [];
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Grammar</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div class="vocab-bank" id="vocabBank"></div>';
+  html += '<div id="gbRows"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const bankEl = document.getElementById("vocabBank");
+  const rowsEl = document.getElementById("gbRows");
+
+  function drawBank(){
+    let html2 = "";
+    bank.forEach(tok => {
+      const isUsed = placed.some(p => p && p.id === tok.id);
+      const isSelected = selectedToken && selectedToken.id === tok.id;
+      html2 += '<span class="vocab-word '+(isUsed?"used":"")+' '+(isSelected?"selected":"")+'" data-id="'+tok.id+'" draggable="'+(!isUsed && !submitted)+'">'+tok.word+'</span>';
+    });
+    bankEl.innerHTML = html2;
+
+    if(!submitted){
+      bankEl.querySelectorAll(".vocab-word").forEach(el => {
+        const id = parseInt(el.getAttribute("data-id"),10);
+        const tok = bank.find(t=>t.id===id);
+        const isUsed = placed.some(p => p && p.id === tok.id);
+        if(isUsed) return;
+        el.onclick = () => {
+          selectedToken = (selectedToken && selectedToken.id===tok.id) ? null : tok;
+          drawBank();
+        };
+        el.ondragstart = (ev) => {
+          ev.dataTransfer.setData("text/plain", String(tok.id));
+        };
+      });
+    }
+  }
+
+  function drawRows(){
+    let html2 = "";
+    html2 += '<div class="qrow example"><span class="num">0</span><span>'+d.example.before+'</span><span class="vocab-blank example">'+d.example.answer+'</span>'+esLine(d.example.sentenceEs)+'</div>';
+
+    d.questions.forEach((q,i) => {
+      const tok = placed[i];
+      let blankClass = "vocab-blank";
+      if(tok) blankClass += " filled";
+      if(submitted) blankClass += correctFlags[i] ? " correct" : " wrong";
+      const label = tok ? tok.word : "&nbsp;&nbsp;&nbsp;&nbsp;";
+      html2 += '<div class="qrow" data-i="'+i+'"><span class="num">'+(i+1)+'</span><span>'+q.before+'</span><span class="'+blankClass+'" data-i="'+i+'">'+label+'</span>'+esLine(q.sentenceEs)+'</div>';
+    });
+    rowsEl.innerHTML = html2;
+
+    if(!submitted){
+      rowsEl.querySelectorAll(".vocab-blank[data-i]").forEach(el => {
+        const i = parseInt(el.getAttribute("data-i"),10);
+        el.onclick = () => {
+          if(placed[i]){
+            placed[i] = null;
+            drawBank(); drawRows(); updateProgress();
+            return;
+          }
+          if(selectedToken){
+            placed[i] = selectedToken;
+            selectedToken = null;
+            drawBank(); drawRows(); updateProgress();
+          }
+        };
+        el.ondragover = (ev) => ev.preventDefault();
+        el.ondrop = (ev) => {
+          ev.preventDefault();
+          const id = parseInt(ev.dataTransfer.getData("text/plain"),10);
+          const tok = bank.find(t=>t.id===id);
+          if(!tok) return;
+          for(let k=0;k<placed.length;k++){
+            if(placed[k] && placed[k].id===tok.id) placed[k]=null;
+          }
+          placed[i] = tok;
+          selectedToken = null;
+          drawBank(); drawRows(); updateProgress();
+        };
+      });
+    }
+  }
+
+  function updateProgress(){
+    const answered = placed.filter(p=>p).length;
+    document.getElementById("progFill").style.width = (answered/d.questions.length*100)+"%";
+  }
+
+  drawBank();
+  drawRows();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    if(placed.some(p => !p)){
+      fb.textContent = "Coloca todas las palabras antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.questions.map((q,i) => {
+      const ok = placed[i].word === q.answer;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.questions.length);
+
+    drawBank();
+    drawRows();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, d.questions.length, () => renderScreen());
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= LISTENING (GRID) ACTIVITY ================= */
+
+function renderListeningGrid(activity){
+  const d = activity.data;
+  const answers = new Array(d.questions.length).fill(null); // selected item index per question
+  let submitted = false;
+  let correctFlags = [];
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Listening</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  if(d.subQuestion){
+    html += '<div class="reading-question">'+d.subQuestion+esLine(d.subQuestionEs)+'</div>';
+  }
+  html += '<div class="listen-grid-wrap" id="lgWrap"></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const wrapEl = document.getElementById("lgWrap");
+
+  function drawGrid(){
+    let html2 = '<div class="listen-grid-wrap"><table class="listen-grid"><thead><tr><th></th>';
+    d.items.forEach(it => {
+      html2 += '<th><img src="'+it.img+'" alt=""></th>';
+    });
+    html2 += '</tr></thead><tbody>';
+
+    html2 += '<tr class="lg-row example"><td><div class="lg-numcell"><button class="listen-btn small" type="button" disabled>&#9658;</button><span class="num">0</span></div></td>';
+    d.items.forEach((it,i) => {
+      const cls = "lg-box disabled" + (i===d.example.answer ? " checked" : "");
+      html2 += '<td><span class="'+cls+'"></span></td>';
+    });
+    html2 += '</tr>';
+
+    d.questions.forEach((q,qi) => {
+      html2 += '<tr class="lg-row" data-qi="'+qi+'"><td><div class="lg-numcell"><button class="listen-btn small" type="button" data-audio-qi="'+qi+'">&#9658;</button><span class="num">'+(qi+1)+'</span></div></td>';
+      d.items.forEach((it,i) => {
+        let cls = "lg-box";
+        if(answers[qi]===i) cls += " checked";
+        if(submitted){
+          if(i===q.correct) cls += " correct";
+          else if(answers[qi]===i) cls += " wrong";
+        }
+        html2 += '<td><span class="'+cls+'" data-qi="'+qi+'" data-i="'+i+'"></span></td>';
+      });
+      html2 += '</tr>';
+    });
+
+    html2 += '</tbody></table></div>';
+    wrapEl.innerHTML = html2;
+
+    wrapEl.querySelectorAll("[data-audio-qi]").forEach(btn => {
+      btn.onclick = () => {
+        showLockToast("Audio pendiente: esperando la respuesta correcta de José");
+      };
+    });
+
+    if(!submitted){
+      wrapEl.querySelectorAll(".lg-box[data-qi]").forEach(el => {
+        el.onclick = () => {
+          const qi = parseInt(el.getAttribute("data-qi"),10);
+          const i = parseInt(el.getAttribute("data-i"),10);
+          answers[qi] = i;
+          drawGrid();
+          updateProgress();
+        };
+      });
+    }
+  }
+
+  function updateProgress(){
+    const answered = answers.filter(a=>a!==null).length;
+    document.getElementById("progFill").style.width = (answered/d.questions.length*100)+"%";
+  }
+
+  drawGrid();
+
+  document.getElementById("closeBtn").onclick = () => {
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    if(answers.some(a => a===null)){
+      fb.textContent = "Responde todas las preguntas antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.questions.map((q,i) => {
+      const ok = answers[i] === q.correct;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.questions.length);
+
+    drawGrid();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => renderScreen();
+    showResultModal(correctCount, d.questions.length, () => renderScreen());
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+/* ================= LISTENING (MATCH) ACTIVITY ================= */
+
+function renderListeningMatch(activity){
+  const d = activity.data;
+  const connections = new Array(d.audios.length).fill(null); // imageIndex per audio slot, or null
+  let selectedAudio = null;
+  let submitted = false;
+  let correctFlags = [];
+  const hasExample = !!d.example;
+
+  let secondsLeft = 6*60;
+  let timerHandle = null;
+
+  let html = "";
+  html += '<div class="activity">';
+  html += '<div class="activity-topbar"><div class="left">&#128214; '+activity.title+'</div><button class="close" id="closeBtn">&#10005;</button></div>';
+  html += '<div class="activity-progressrow"><div class="track"><div class="fill" id="progFill" style="width:0%"></div></div><div class="timer">&#9200; <span id="timerLabel">6 minutes left</span></div></div>';
+  html += '<div class="activity-body">';
+  html += '<h2>Listening</h2>';
+  html += '<div class="instructions">'+d.instructions+esLine(d.instructionsEs)+'</div>';
+  html += '<div class="lm-scroll"><div class="lm-wrap" id="lmWrap">';
+  html += '<div class="lm-audio-row" id="lmAudioRow"></div>';
+  html += '<svg class="lm-svg" id="lmSvg"></svg>';
+  html += '<div class="lm-image-row" id="lmImageRow"></div>';
+  html += '</div></div>';
+  html += '<div class="activity-feedback" id="feedback"></div>';
+  html += '</div>';
+  html += '<div class="activity-footer"><button class="submit-btn" id="submitBtn">Submit</button></div>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  const wrapEl = document.getElementById("lmWrap");
+  const audioRowEl = document.getElementById("lmAudioRow");
+  const imageRowEl = document.getElementById("lmImageRow");
+  const svgEl = document.getElementById("lmSvg");
+
+  function drawRows(){
+    let ah = "";
+    if(hasExample){
+      ah += '<div class="lm-audio-cell" data-ai="ex">';
+      ah += '<button class="listen-btn small" type="button" data-audio-ai="ex" disabled>&#9658;</button>';
+      ah += '<span class="lm-dot active" data-audio-dot="ex"></span>';
+      ah += '</div>';
+    }
+    d.audios.forEach((a,ai) => {
+      const isSelected = selectedAudio === ai;
+      const isConnected = connections[ai] !== null;
+      let btnCls = "listen-btn small" + (isSelected ? " selected" : "");
+      ah += '<div class="lm-audio-cell" data-ai="'+ai+'">';
+      ah += '<button class="'+btnCls+'" type="button" data-audio-ai="'+ai+'">&#9658;</button>';
+      ah += '<span class="lm-dot'+(isConnected||isSelected?" active":"")+'" data-audio-dot="'+ai+'"></span>';
+      ah += '</div>';
+    });
+    audioRowEl.innerHTML = ah;
+
+    let ih = "";
+    d.images.forEach((img,ii) => {
+      const isExampleImg = hasExample && d.example.correct === ii;
+      const used = connections.some(c => c===ii) || isExampleImg;
+      let cellCls = "lm-image-cell" + (used ? " used" : "") + (isExampleImg ? " example" : "");
+      if(submitted){
+        const ai = connections.findIndex(c => c===ii);
+        if(ai !== -1){
+          const ok = d.audios[ai].correct === ii;
+          cellCls += ok ? " correct" : " wrong";
+        }
+      }
+      ih += '<div class="'+cellCls+'" data-ii="'+ii+'">';
+      ih += '<span class="lm-dot'+(used?" active":"")+'" data-image-dot="'+ii+'"></span>';
+      ih += '<img src="'+img.img+'" alt="" data-image-ii="'+ii+'">';
+      ih += '</div>';
+    });
+    imageRowEl.innerHTML = ih;
+
+    if(!submitted){
+      audioRowEl.querySelectorAll("[data-audio-ai]:not([disabled])").forEach(btn => {
+        btn.onclick = () => {
+          showLockToast("Audio pendiente: esperando la respuesta correcta de José");
+          const ai = parseInt(btn.getAttribute("data-audio-ai"),10);
+          selectedAudio = (selectedAudio === ai) ? null : ai;
+          drawRows();
+        };
+      });
+      imageRowEl.querySelectorAll("[data-image-ii]").forEach(imgEl => {
+        imgEl.onclick = () => {
+          const ii = parseInt(imgEl.getAttribute("data-image-ii"),10);
+          if(hasExample && d.example.correct === ii) return; // image already taken by the example
+          if(selectedAudio !== null){
+            for(let k=0;k<connections.length;k++){
+              if(connections[k]===ii) connections[k]=null;
+            }
+            connections[selectedAudio] = ii;
+            selectedAudio = null;
+          } else {
+            const ai = connections.findIndex(c => c===ii);
+            if(ai !== -1) connections[ai] = null;
+          }
+          drawRows();
+          updateProgress();
+        };
+      });
+    }
+
+    drawLines();
+  }
+
+  function drawLines(){
+    const wrapRect = wrapEl.getBoundingClientRect();
+    svgEl.setAttribute("width", wrapRect.width);
+    svgEl.setAttribute("height", wrapRect.height);
+    let svgHtml = "";
+    if(hasExample){
+      const dotA = audioRowEl.querySelector('[data-audio-dot="ex"]');
+      const dotB = imageRowEl.querySelector('[data-image-dot="'+d.example.correct+'"]');
+      if(dotA && dotB){
+        const ra = dotA.getBoundingClientRect();
+        const rb = dotB.getBoundingClientRect();
+        const x1 = ra.left + ra.width/2 - wrapRect.left;
+        const y1 = ra.top + ra.height/2 - wrapRect.top;
+        const x2 = rb.left + rb.width/2 - wrapRect.left;
+        const y2 = rb.top + rb.height/2 - wrapRect.top;
+        svgHtml += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="var(--muted)" stroke-width="2.5" opacity="0.6" />';
+      }
+    }
+    connections.forEach((ii, ai) => {
+      if(ii === null) return;
+      const dotA = audioRowEl.querySelector('[data-audio-dot="'+ai+'"]');
+      const dotB = imageRowEl.querySelector('[data-image-dot="'+ii+'"]');
+      if(!dotA || !dotB) return;
+      const ra = dotA.getBoundingClientRect();
+      const rb = dotB.getBoundingClientRect();
+      const x1 = ra.left + ra.width/2 - wrapRect.left;
+      const y1 = ra.top + ra.height/2 - wrapRect.top;
+      const x2 = rb.left + rb.width/2 - wrapRect.left;
+      const y2 = rb.top + rb.height/2 - wrapRect.top;
+      let stroke = "var(--accent)";
+      if(submitted){
+        const ok = d.audios[ai].correct === ii;
+        stroke = ok ? "var(--good)" : "var(--bad)";
+      }
+      svgHtml += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="2.5" />';
+    });
+    svgEl.innerHTML = svgHtml;
+  }
+
+  function updateProgress(){
+    const answered = connections.filter(c=>c!==null).length;
+    document.getElementById("progFill").style.width = (answered/d.audios.length*100)+"%";
+  }
+
+  function onResize(){ drawLines(); }
+  window.addEventListener("resize", onResize);
+
+  drawRows();
+
+  document.getElementById("closeBtn").onclick = () => {
+    window.removeEventListener("resize", onResize);
+    if(timerHandle) clearInterval(timerHandle);
+    screen = "menu";
+    renderScreen();
+  };
+
+  document.getElementById("submitBtn").onclick = () => {
+    if(submitted) return;
+    const fb = document.getElementById("feedback");
+    if(connections.some(c => c===null)){
+      fb.textContent = "Conecta todos los audios con una imagen antes de enviar.";
+      return;
+    }
+    fb.textContent = "";
+    submitted = true;
+    let correctCount = 0;
+    correctFlags = d.audios.map((a,ai) => {
+      const ok = connections[ai] === a.correct;
+      if(ok) correctCount++;
+      return ok;
+    });
+
+    applyScore(activity.id, correctCount, d.audios.length);
+
+    drawRows();
+    if(timerHandle) clearInterval(timerHandle);
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.textContent = "Intentar de nuevo";
+    submitBtn.onclick = () => {
+      window.removeEventListener("resize", onResize);
+      renderScreen();
+    };
+    showResultModal(correctCount, d.audios.length, () => {
+      window.removeEventListener("resize", onResize);
+      renderScreen();
+    });
+  };
+
+  function tick(){
+    if(submitted) return;
+    secondsLeft = Math.max(0, secondsLeft-1);
+    const minsLeft = Math.max(1, Math.ceil(secondsLeft/60));
+    document.getElementById("timerLabel").textContent = (secondsLeft<=0 ? "0" : minsLeft) + " minutes left";
+    if(secondsLeft<=0 && timerHandle){ clearInterval(timerHandle); }
+  }
+  timerHandle = setInterval(tick, 1000);
+}
+
+function showResultModal(correct, total, onRetry){
+  const pct = Math.round(correct/total*100);
+  const backdrop = document.createElement("div");
+  backdrop.className = "modal-backdrop";
+  backdrop.innerHTML =
+    '<div class="modal">'+
+      '<h3><span class="check-icon">&#10003;</span>Submitted</h3>'+
+      '<p>Submission has been successful. Muy bien! Tu puntaje se sumo al examen.</p>'+
+      '<div class="modal-stats">'+
+        '<div><div class="label">You answered</div><div class="value">'+total+'/'+total+'</div></div>'+
+        '<div><div class="label">Correct</div><div class="value">'+correct+'</div></div>'+
+        '<div><div class="label">Score</div><div class="value">'+pct+'%</div></div>'+
+      '</div>'+
+      '<div style="display:flex; gap:10px;">'+
+        '<button class="modal-close" id="modalRetryBtn" style="background:var(--muted)">Intentar de nuevo</button>'+
+        '<button class="modal-close" id="modalCloseBtn">Cerrar</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(backdrop);
+  document.getElementById("modalCloseBtn").onclick = () => {
+    backdrop.remove();
+  };
+  document.getElementById("modalRetryBtn").onclick = () => {
+    backdrop.remove();
+    if(onRetry) onRetry();
+  };
+}
+
+/* ================= ROUTER ================= */
+
+function renderScreen(){
+  if(screen === "menu"){
+    renderMenu();
+    return;
+  }
+  const activity = activities.find(a => a.id === screen);
+  if(!activity){ screen="menu"; renderMenu(); return; }
+  if(activity.kind === "grammar"){
+    renderGrammar(activity);
+  } else if(activity.kind === "vocabulary"){
+    renderVocabulary(activity);
+  } else if(activity.kind === "reading"){
+    renderReading(activity);
+  } else if(activity.kind === "grammarmc"){
+    renderGrammarMC(activity);
+  } else if(activity.kind === "vocabularytext"){
+    renderVocabularyText(activity);
+  } else if(activity.kind === "grammarbank"){
+    renderGrammarBank(activity);
+  } else if(activity.kind === "listeninggrid"){
+    renderListeningGrid(activity);
+  } else if(activity.kind === "listeningmatch"){
+    renderListeningMatch(activity);
+  }
+}
+
+renderScreen();
+</script>
